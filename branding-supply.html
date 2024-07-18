@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Awesome Supply Branding Thing</title>
+    <style>
+        :root {
+            --s-brand: #3498db;
+            --s-brand-shade-100: #e6f7ff;
+            --s-brand-shade-200: #cceeff;
+            --s-brand-shade-300: #b3e6ff;
+            --s-brand-shade-400: #99ddff;
+            --s-brand-shade-500: #80d4ff;
+            --s-brand-shade-600: #66ccff;
+            --s-brand-shade-700: #4dc3ff;
+            --s-brand-shade-800: #33bbff;
+            --s-brand-shade-900: #1ab2ff;
+            --s-brand-shade-1000: #00aaff;
+            --s-brand-bg-default: var(--s-brand);
+            --s-brand-bg-hover: var(--s-brand-shade-100);
+            --s-brand-bg-active: var(--s-brand-shade-200);
+            --s-brand-txt-default: white;
+            --s-brand-txt-hover: white;
+            --s-brand-txt-active: white;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        #swatches {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .swatch {
+            width: 150px;
+            height: 50px;
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: regular;
+            font-size: 12px;
+            border: 1px solid #000;
+            white-space: pre-wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+        }
+
+        #jsonPanel {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            white-space: pre-wrap;
+            text-align: left;
+        }
+
+        #defaultButton {
+            background-color: var(--s-brand-bg-default);
+            color: var(--s-brand-txt-default);
+        }
+
+        #hoverButton {
+            background-color: var(--s-brand-bg-hover);
+            color: var(--s-brand-txt-hover);
+        }
+
+        #activeButton {
+            background-color: var(--s-brand-bg-active);
+            color: var(--s-brand-txt-active);
+        }
+
+        #interactiveButton {
+            background-color: var(--s-brand-bg-default);
+            color: var(--s-brand-txt-default);
+        }
+    </style>
+</head>
+<body>
+    <h1>Super Awesome Supply Branding Thing</h1>
+    <input type="color" id="colorPicker" value="#3498db">
+    <input type="text" id="hexInput" placeholder="#3498db">
+    <div id="swatches"></div>
+    <button id="interactiveButton">Interactive Button</button>
+    <span id="interactiveButtonShade">Interactive</span>
+    <button id="defaultButton">Default State Button</button>
+    <span id="defaultButtonShade">Default</span>
+    <button id="hoverButton">Hover State Button</button>
+    <span id="hoverButtonShade">Hover</span>
+    <button id="activeButton">Active State Button</button>
+    <span id="activeButtonShade">Active</span>
+    <div id="jsonPanel" style="display: none;">
+        <pre id="jsonContent"></pre>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const colorPicker = document.getElementById('colorPicker');
+            const hexInput = document.getElementById('hexInput');
+            const swatches = document.getElementById('swatches');
+            const defaultButton = document.getElementById('defaultButton');
+            const hoverButton = document.getElementById('hoverButton');
+            const activeButton = document.getElementById('activeButton');
+            const interactiveButton = document.getElementById('interactiveButton');
+            const jsonPanel = document.getElementById('jsonPanel');
+
+            const luminanceLevels = [0.95, 0.85, 0.75, 0.65, 0.55, 0.45, 0.35, 0.25, 0.15, 0.05];
+
+            function getContrastColor(hex) {
+                const whiteContrast = chroma.contrast(hex, 'white');
+                const blackContrast = chroma.contrast(hex, 'black');
+                return whiteContrast >= 4.5 ? 'white' : 'black';
+            }
+
+            function updateSwatches(color) {
+                swatches.innerHTML = '';
+                luminanceLevels.forEach((l, index) => {
+                    const swatchColor = chroma(color).set('hsl.l', l).hex(); // Adjust lightness in HSL
+                    const swatch = document.createElement('div');
+                    swatch.className = 'swatch';
+                    swatch.style.backgroundColor = swatchColor;
+                    swatch.style.color = getContrastColor(swatchColor);
+                    
+                    const contrastRatio = chroma.contrast(swatchColor, getContrastColor(swatchColor)).toFixed(2);
+                    swatch.innerHTML = `
+                        <p>${(index + 1) * 100}</p>
+                        <p>${swatchColor}</p>
+                        <p>${contrastRatio}</p>
+                    `;
+                    
+                    swatch.addEventListener('click', () => {
+                        document.getElementById('selectedSwatchLabel').textContent = `Selected Swatch: ${(index + 1) * 100}`;
+                    });
+                    swatches.appendChild(swatch);
+                });
+
+                // Update button colors
+                updateButtonColors(color);
+
+                // Update JSON panel
+                updateJsonPanel(color);
+            }
+
+            function updateButtonColors(color) {
+                const lighterShade = chroma(color).set('hsl.l', 0.85).hex();
+                const darkerShade = chroma(color).set('hsl.l', 0.25).hex();
+
+                document.documentElement.style.setProperty('--s-brand-bg-default', color);
+                document.documentElement.style.setProperty('--s-brand-bg-hover', lighterShade);
+                document.documentElement.style.setProperty('--s-brand-bg-active', darkerShade);
+
+                document.documentElement.style.setProperty('--s-brand-txt-default', getContrastColor(color));
+                document.documentElement.style.setProperty('--s-brand-txt-hover', getContrastColor(lighterShade));
+                document.documentElement.style.setProperty('--s-brand-txt-active', getContrastColor(darkerShade));
+
+                document.getElementById('defaultButtonShade').textContent = 'Default (500)';
+                document.getElementById('hoverButtonShade').textContent = 'Hover (150)';
+                document.getElementById('activeButtonShade').textContent = 'Active (250)';
+
+                // Update interactive button colors
+                interactiveButton.style.backgroundColor = color;
+                interactiveButton.style.color = getContrastColor(color);
+                document.getElementById('interactiveButtonShade').textContent = 'Interactive (500)';
+
+                // Add interactive button event listeners
+                interactiveButton.addEventListener('mouseover', () => {
+                    interactiveButton.style.backgroundColor = lighterShade;
+                    interactiveButton.style.color = getContrastColor(lighterShade);
+                    document.getElementById('interactiveButtonShade').textContent = 'Hover (150)';
+                });
+
+                interactiveButton.addEventListener('mouseout', () => {
+                    interactiveButton.style.backgroundColor = color;
+                    interactiveButton.style.color = getContrastColor(color);
+                    document.getElementById('interactiveButtonShade').textContent = 'Interactive (500)';
+                });
+
+                interactiveButton.addEventListener('mousedown', () => {
+                    interactiveButton.style.backgroundColor = darkerShade;
+                    interactiveButton.style.color = getContrastColor(darkerShade);
+                    document.getElementById('interactiveButtonShade').textContent = 'Active (250)';
+                });
+
+                interactiveButton.addEventListener('mouseup', () => {
+                    interactiveButton.style.backgroundColor = lighterShade;
+                    interactiveButton.style.color = getContrastColor(lighterShade);
+                    document.getElementById('interactiveButtonShade').textContent = 'Hover (150)';
+                });
+            }
+
+            function generateDesignTokens(color) {
+                const tokens = {
+                    "primitives": {
+                        "$description": "Design tokens for brand colors",
+                        "brand": {
+                            "$value": color,
+                            "$type": "color",
+                            "$description": "Primary brand color",
+                            "shades": {} // Moved shades inside brand
+                        }
+                    },
+                    "brand": {
+                        "bg-default": {
+                            "$value": "{primitives.brand.$value}",
+                            "$type": "color",
+                            "$description": "Default background color"
+                        },
+                        "bg-hover": {
+                            "$value": "{primitives.brand.shades.150.$value}",
+                            "$type": "color",
+                            "$description": "Hover background color"
+                        },
+                        "bg-active": {
+                            "$value": "{primitives.brand.shades.250.$value}",
+                            "$type": "color",
+                            "$description": "Active background color"
+                        },
+                        "txt-default": {
+                            "$value": getContrastColor(color),
+                            "$type": "color",
+                            "$description": "Default text color"
+                        },
+                        "txt-hover": {
+                            "$value": getContrastColor(chroma(color).set('hsl.l', 0.85).hex()),
+                            "$type": "color",
+                            "$description": "Hover text color"
+                        },
+                        "txt-active": {
+                            "$value": getContrastColor(chroma(color).set('hsl.l', 0.25).hex()),
+                            "$type": "color",
+                            "$description": "Active text color"
+                        }
+                    }
+                };
+                luminanceLevels.forEach((l, index) => {
+                    const shadeValue = chroma(color).set('hsl.l', l).hex();
+                    tokens.primitives.brand.shades[`${(index + 1) * 100}`] = {
+                        "$value": shadeValue,
+                        "$type": "color",
+                        "$description": `Shade ${(index + 1) * 100}`
+                    };
+                });
+
+                return tokens;
+            }
+
+            function updateJsonPanel(color) {
+                const tokens = generateDesignTokens(color);
+                document.getElementById('jsonContent').textContent = JSON.stringify(tokens, null, 2);
+                jsonPanel.style.display = 'block';
+            }
+
+            colorPicker.addEventListener('input', (e) => {
+                hexInput.value = e.target.value;
+                updateSwatches(e.target.value);
+            });
+
+            hexInput.addEventListener('input', (e) => {
+                const color = e.target.value;
+                if (chroma.valid(color)) {
+                    colorPicker.value = color;
+                    updateSwatches(color);
+                }
+            });
+
+            // Initialize with default color
+            updateSwatches(colorPicker.value);
+        });
+    </script>
+</body>
+</html>
