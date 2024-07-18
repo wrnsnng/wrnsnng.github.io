@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Superawesome and Cool Supply Branding Tool Thing</title>
+        <style>
+            :root {
+                --default-bg: #000000;
+                --default-text: #ffffff;
+                --hover-bg: #000000;
+                --hover-text: #ffffff;
+                --active-bg: #000000;
+                --active-text: #ffffff;
+            }
+
+            body {
+                font-family: Arial, sans-serif;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                margin: 0;
+                background-color: #f4f4f4;
+                color: #333;
+            }
+            #app-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                background-color: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                margin-bottom: 20px;
+                font-size: 24px;
+                color: #333;
+            }
+            #color-box {
+                width: 300px;
+                height: 100px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: black;
+                margin-top: 20px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            .contrast-values,
+            .hex-input,
+            .color-info {
+                margin-top: 10px;
+                text-align: center;
+            }
+            .buttons {
+                display: flex;
+                gap: 10px;
+                margin-top: 20px;
+            }
+            .button,
+            .interactive-button {
+                padding: 10px 20px;
+                border: none;
+                cursor: pointer;
+                transition:
+                    background-color 0.3s,
+                    color 0.3s;
+                border-radius: 4px;
+            }
+            .example-app {
+                margin-top: 40px;
+                width: 100%;
+                max-width: 600px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .example-header {
+                background-color: var(--default-bg);
+                color: var(--default-text);
+                padding: 10px;
+                text-align: center;
+                border-radius: 4px;
+            }
+            .example-button {
+                background-color: var(--default-bg);
+                color: var(--default-text);
+                padding: 10px;
+                text-align: center;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition:
+                    background-color 0.3s,
+                    color 0.3s;
+            }
+            .example-button:hover {
+                background-color: var(--hover-bg);
+                color: var(--hover-text);
+            }
+            .example-button:active {
+                background-color: var(--active-bg);
+                color: var(--active-text);
+            }
+            .example-input,
+            .example-textarea,
+            .example-checkbox {
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                margin-top: 10px;
+            }
+            .example-input,
+            .example-textarea {
+                width: 100%;
+                max-width: 580px;
+            }
+            .example-input {
+                height: 40px;
+            }
+            .example-textarea {
+                height: 80px;
+            }
+            .example-checkbox label {
+                margin-left: 8px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app-container">
+            <h1>Superawesome and Cool Supply Branding Tool Thing</h1>
+            <input type="color" id="color-picker" />
+            <div class="hex-input">
+                <label for="hex-input">Enter Hex Value: </label>
+                <input
+                    type="text"
+                    id="hex-input"
+                    placeholder="#000000"
+                    maxlength="7"
+                />
+            </div>
+            <div id="color-box">
+                <p id="text-sample">Sample Text</p>
+            </div>
+            <div class="contrast-values">
+                <p>Contrast with Black: <span id="contrast-black"></span></p>
+                <p>Contrast with White: <span id="contrast-white"></span></p>
+            </div>
+            <div class="buttons">
+                <div>
+                    <button
+                        class="button"
+                        id="default-button"
+                        style="
+                            background-color: var(--default-bg);
+                            color: var(--default-text);
+                        "
+                    >
+                        Click Here
+                    </button>
+                    <div class="color-info">
+                        Background: <span id="default-bg-token"></span>, Text:
+                        <span id="default-text-token"></span>, Contrast:
+                        <span id="default-contrast"></span>
+                    </div>
+                </div>
+                <div>
+                    <button
+                        class="button"
+                        id="hover-button"
+                        style="
+                            background-color: var(--hover-bg);
+                            color: var(--hover-text);
+                        "
+                    >
+                        Click Here
+                    </button>
+                    <div class="color-info">
+                        Background: <span id="hover-bg-token"></span>, Text:
+                        <span id="hover-text-token"></span>, Contrast:
+                        <span id="hover-contrast"></span>
+                    </div>
+                </div>
+                <div>
+                    <button
+                        class="button"
+                        id="active-button"
+                        style="
+                            background-color: var(--active-bg);
+                            color: var(--active-text);
+                        "
+                    >
+                        Click Here
+                    </button>
+                    <div class="color-info">
+                        Background: <span id="active-bg-token"></span>, Text:
+                        <span id="active-text-token"></span>, Contrast:
+                        <span id="active-contrast"></span>
+                    </div>
+                </div>
+                <button
+                    class="interactive-button"
+                    id="interactive-button"
+                    style="
+                        background-color: var(--default-bg);
+                        color: var(--default-text);
+                    "
+                >
+                    Click Here
+                </button>
+            </div>
+            <div class="example-app">
+                <div class="example-header">Example Header</div>
+                <button class="example-button">Example Button</button>
+                <input
+                    type="text"
+                    class="example-input"
+                    placeholder="Example Input"
+                />
+                <textarea
+                    class="example-textarea"
+                    placeholder="Example Textarea"
+                ></textarea>
+                <div class="example-checkbox">
+                    <input type="checkbox" id="example-checkbox" />
+                    <label for="example-checkbox">Example Checkbox</label>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        const getLuminance = (color) =>
+            color
+                .match(/\w\w/g)
+                .map((x) => parseInt(x, 16) / 255)
+                .map((v) =>
+                    v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4,
+                )
+                .reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0);
+
+        const getContrastRatio = (lum1, lum2) =>
+            (Math.max(lum1, lum2) + 0.05) / (Math.min(lum1, lum2) + 0.05);
+
+        const adjustColor = (color, amt) => {
+            const num = parseInt(color.slice(1), 16);
+            const R = Math.min(255, Math.max(0, (num >> 16) + amt));
+            const G = Math.min(255, Math.max(0, ((num >> 8) & 0x00ff) + amt));
+            const B = Math.min(255, Math.max(0, (num & 0x0000ff) + amt));
+            return `#${((R << 16) | (G << 8) | B).toString(16).padStart(6, "0").toUpperCase()}`;
+        };
+
+        const ensureContrast = (
+            baseColor,
+            targetLuminance,
+            minContrast,
+            isLighter = true,
+        ) => {
+            let adjustedColor = baseColor;
+            let contrast = getContrastRatio(
+                getLuminance(adjustedColor),
+                targetLuminance,
+            );
+            let amt = isLighter ? 5 : -5;
+            while (contrast < minContrast && Math.abs(amt) < 255) {
+                adjustedColor = adjustColor(adjustedColor, amt);
+                contrast = getContrastRatio(
+                    getLuminance(adjustedColor),
+                    targetLuminance,
+                );
+                amt = isLighter ? amt + 5 : amt - 5;
+            }
+            return adjustedColor;
+        };
+
+        const updateButtonColors = (
+            button,
+            bgColor,
+            textColorId,
+            bgColorId,
+            contrastId,
+        ) => {
+            const textColor =
+                getContrastRatio(
+                    getLuminance(bgColor),
+                    getLuminance("ffffff"),
+                ) >=
+                getContrastRatio(getLuminance(bgColor), getLuminance("000000"))
+                    ? "white"
+                    : "black";
+            button.style.backgroundColor = bgColor;
+            button.style.color = textColor;
+            textColorId.textContent = textColor;
+            bgColorId.textContent = bgColor;
+            contrastId.textContent = getContrastRatio(
+                getLuminance(bgColor),
+                getLuminance(textColor),
+            ).toFixed(2);
+        };
+
+        const updateTextColor = () => {
+            const colorPicker = document.getElementById("color-picker");
+            const hexInput = document.getElementById("hex-input");
+            const chosenColor = colorPicker.value;
+            document.getElementById("color-box").style.backgroundColor =
+                hexInput.value = chosenColor;
+
+            const lumChosen = getLuminance(chosenColor);
+            document.getElementById("contrast-black").textContent =
+                getContrastRatio(lumChosen, getLuminance("000000")).toFixed(2);
+            document.getElementById("contrast-white").textContent =
+                getContrastRatio(lumChosen, getLuminance("ffffff")).toFixed(2);
+
+            const textColor =
+                getContrastRatio(lumChosen, getLuminance("ffffff")) >=
+                getContrastRatio(lumChosen, getLuminance("000000"))
+                    ? "white"
+                    : "black";
+            document.getElementById("text-sample").style.color = textColor;
+
+            document.documentElement.style.setProperty(
+                "--default-bg",
+                chosenColor,
+            );
+            document.documentElement.style.setProperty(
+                "--default-text",
+                textColor,
+            );
+
+            const hoverColor = ensureContrast(
+                chosenColor,
+                lumChosen,
+                1.5,
+                true,
+            );
+            document.documentElement.style.setProperty(
+                "--hover-bg",
+                hoverColor,
+            );
+            document.documentElement.style.setProperty(
+                "--hover-text",
+                getContrastRatio(
+                    getLuminance(hoverColor),
+                    getLuminance("ffffff"),
+                ) >=
+                    getContrastRatio(
+                        getLuminance(hoverColor),
+                        getLuminance("000000"),
+                    )
+                    ? "white"
+                    : "black",
+            );
+
+            const activeColor = ensureContrast(
+                hoverColor,
+                getLuminance(hoverColor),
+                1.5,
+                false,
+            );
+            document.documentElement.style.setProperty(
+                "--active-bg",
+                activeColor,
+            );
+            document.documentElement.style.setProperty(
+                "--active-text",
+                getContrastRatio(
+                    getLuminance(activeColor),
+                    getLuminance("ffffff"),
+                ) >=
+                    getContrastRatio(
+                        getLuminance(activeColor),
+                        getLuminance("000000"),
+                    )
+                    ? "white"
+                    : "black",
+            );
+
+            updateButtonColors(
+                document.getElementById("default-button"),
+                getComputedStyle(document.documentElement)
+                    .getPropertyValue("--default-bg")
+                    .trim(),
+                document.getElementById("default-text-token"),
+                document.getElementById("default-bg-token"),
+                document.getElementById("default-contrast"),
+            );
+            updateButtonColors(
+                document.getElementById("hover-button"),
+                getComputedStyle(document.documentElement)
+                    .getPropertyValue("--hover-bg")
+                    .trim(),
+                document.getElementById("hover-text-token"),
+                document.getElementById("hover-bg-token"),
+                document.getElementById("hover-contrast"),
+            );
+            updateButtonColors(
+                document.getElementById("active-button"),
+                getComputedStyle(document.documentElement)
+                    .getPropertyValue("--active-bg")
+                    .trim(),
+                document.getElementById("active-text-token"),
+                document.getElementById("active-bg-token"),
+                document.getElementById("active-contrast"),
+            );
+
+            const interactiveButton =
+                document.getElementById("interactive-button");
+            interactiveButton.style.backgroundColor = getComputedStyle(
+                document.documentElement,
+            )
+                .getPropertyValue("--default-bg")
+                .trim();
+            interactiveButton.style.color = getComputedStyle(
+                document.documentElement,
+            )
+                .getPropertyValue("--default-text")
+                .trim();
+            interactiveButton.onmouseover = () =>
+                updateButtonColors(
+                    interactiveButton,
+                    getComputedStyle(document.documentElement)
+                        .getPropertyValue("--hover-bg")
+                        .trim(),
+                    { textContent: "" },
+                    { textContent: "" },
+                    { textContent: "" },
+                );
+            interactiveButton.onmouseout = () =>
+                updateButtonColors(
+                    interactiveButton,
+                    getComputedStyle(document.documentElement)
+                        .getPropertyValue("--default-bg")
+                        .trim(),
+                    { textContent: "" },
+                    { textContent: "" },
+                    { textContent: "" },
+                );
+            interactiveButton.onmousedown = () =>
+                updateButtonColors(
+                    interactiveButton,
+                    getComputedStyle(document.documentElement)
+                        .getPropertyValue("--active-bg")
+                        .trim(),
+                    { textContent: "" },
+                    { textContent: "" },
+                    { textContent: "" },
+                );
+            interactiveButton.onmouseup = () =>
+                updateButtonColors(
+                    interactiveButton,
+                    getComputedStyle(document.documentElement)
+                        .getPropertyValue("--hover-bg")
+                        .trim(),
+                    { textContent: "" },
+                    { textContent: "" },
+                    { textContent: "" },
+                );
+        };
+
+        document
+            .getElementById("color-picker")
+            .addEventListener("input", updateTextColor);
+        document.getElementById("hex-input").addEventListener("input", () => {
+            if (
+                /^#[0-9A-F]{6}$/i.test(
+                    document.getElementById("hex-input").value,
+                )
+            ) {
+                document.getElementById("color-picker").value =
+                    document.getElementById("hex-input").value;
+                updateTextColor();
+            }
+        });
+
+        updateTextColor();
+    </script>
+</html>
