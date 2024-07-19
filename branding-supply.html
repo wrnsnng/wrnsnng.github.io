@@ -208,7 +208,7 @@
                     "primitives": {
                         "$description": "Design tokens for brand colors",
                         "brand": {
-                            "$value": color,
+                            "color": color,
                             "$type": "color",
                             "$description": "Primary brand color",
                             "shades": {} // Moved shades inside brand
@@ -216,32 +216,32 @@
                     },
                     "brand": {
                         "bg-default": {
-                            "$value": "{primitives.brand.$value}",
+                            "color": "{primitives.brand}",
                             "$type": "color",
                             "$description": "Default background color"
                         },
                         "bg-hover": {
-                            "$value": "{primitives.brand.shades.150.$value}",
+                            "color": "{primitives.brand.shades.100}",
                             "$type": "color",
                             "$description": "Hover background color"
                         },
                         "bg-active": {
-                            "$value": "{primitives.brand.shades.250.$value}",
+                            "color": "{primitives.brand.shades.200}",
                             "$type": "color",
                             "$description": "Active background color"
                         },
                         "txt-default": {
-                            "$value": getContrastColor(color),
+                            "color": "{primitives.brand.color}",
                             "$type": "color",
                             "$description": "Default text color"
                         },
                         "txt-hover": {
-                            "$value": getContrastColor(chroma(color).set('hsl.l', 0.85).hex()),
+                            "color": "{primitives.brand.shades.100}",
                             "$type": "color",
                             "$description": "Hover text color"
                         },
                         "txt-active": {
-                            "$value": getContrastColor(chroma(color).set('hsl.l', 0.25).hex()),
+                            "color": "{primitives.brand.shades.200}",
                             "$type": "color",
                             "$description": "Active text color"
                         }
@@ -250,7 +250,7 @@
                 luminanceLevels.forEach((l, index) => {
                     const shadeValue = chroma(color).set('hsl.l', l).hex();
                     tokens.primitives.brand.shades[`${(index + 1) * 100}`] = {
-                        "$value": shadeValue,
+                        "color": shadeValue,
                         "$type": "color",
                         "$description": `Shade ${(index + 1) * 100}`
                     };

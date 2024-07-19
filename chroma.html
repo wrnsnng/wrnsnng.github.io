@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Swatches Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js"></script>
+    <style>
+        .swatch {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            margin: 5px;
+            text-align: center;
+            line-height: 100px;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>Color Swatches Generator</h1>
+    <h2>Brand Color</h2>
+    <input type="color" id="brandColorPicker" value="#371ee1">
+    <input type="text" id="brandColorInput" value="#371ee1">
+    <button onclick="generateSwatches('brand')">Generate Brand Swatches</button>
+    <div id="brandSwatchesContainer"></div>
+
+    <h2>Primary Color</h2>
+    <input type="color" id="primaryColorPicker" value="#e1371e">
+    <input type="text" id="primaryColorInput" value="#e1371e">
+    <button onclick="generateSwatches('primary')">Generate Primary Swatches</button>
+    <div id="primarySwatchesContainer"></div>
+
+    <script>
+        function generateSwatches(type) {
+            const colorInput = document.getElementById(`${type}ColorInput`).value;
+            const colorPicker = document.getElementById(`${type}ColorPicker`).value;
+            const color = colorInput || colorPicker;
+            const swatchesContainer = document.getElementById(`${type}SwatchesContainer`);
+            swatchesContainer.innerHTML = '';
+            // Generate swatches for the color
+            const darkShades = chroma.scale([color, 'black']).mode('lch').colors(6).slice(0, -1);
+            
+            // Get the lightness of the color
+            const colorLightness = chroma(color).get('lch.l');
+            
+            // Calculate the lightness steps dynamically, starting at colorLightness + 10
+            const steps = 5; // Number of light shades including start and end
+            const startLightness = Math.min(colorLightness + 10, 110); // Ensure startLightness does not exceed 110
+            const endLightness = 110; // End lightness
+            const lightnessSteps = Array.from({ length: steps }, (_, i) => startLightness + (endLightness - startLightness) * (i / (steps - 1)));
+            
+            const lightShades = lightnessSteps.map(l => chroma(color).set('lch.l', l)); // Use calculated lightness steps
+            const swatches = [...darkShades.reverse(), ...lightShades];
+            swatches.forEach(color => {
+                const swatch = document.createElement('div');
+                swatch.className = 'swatch';
+                swatch.style.backgroundColor = color;
+                swatch.textContent = color;
+                swatchesContainer.appendChild(swatch);
+            });
+        }
+
+        document.getElementById('brandColorPicker').addEventListener('input', function() {
+            document.getElementById('brandColorInput').value = this.value;
+        });
+
+        document.getElementById('brandColorInput').addEventListener('input', function() {
+            document.getElementById('brandColorPicker').value = this.value;
+        });
+
+        document.getElementById('primaryColorPicker').addEventListener('input', function() {
+            document.getElementById('primaryColorInput').value = this.value;
+        });
+
+        document.getElementById('primaryColorInput').addEventListener('input', function() {
+            document.getElementById('primaryColorPicker').value = this.value;
+        });
+    </script>
+</body>
+</html>
